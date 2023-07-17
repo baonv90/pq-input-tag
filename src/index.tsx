@@ -1,8 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import * as ReactDOM from "react-dom";
 import data from "./data.json";
 
-import CrossIcon from "./icons/cross.svg";
+import MultiSelect from "./components/multi-select";
 
 import "./index.css";
 
@@ -27,8 +27,12 @@ const Root = () => {
       <div className="Root__separator" />
 
       {/* TODO: Insert your component below */}
-      <CrossIcon />
-      <div className="Root__select">PUT THE COMPONENT HERE</div>
+      <div className="Root__select">
+        <MultiSelect
+          onChange={(values) => setSelectedItems(values)}
+          selectedItems={selectedItems}
+        />
+      </div>
     </div>
   );
 };
