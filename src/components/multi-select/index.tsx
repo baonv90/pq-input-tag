@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 
 import InputDisplay from "./input";
@@ -25,8 +25,23 @@ type Props = {
   placeholder?: string;
 };
 
-function MultiSelect({ selectedItems, onChange, placeholder = "Placeholder" }: Props) {
+function MultiSelect({
+  selectedItems,
+  onChange,
+  placeholder = "Placeholder",
+}: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const onUpdateItems = useCallback(
+    (newItem: Item) => {
+      const newSelectedItems = selectedItems.includes(newItem)
+        ? selectedItems.filter((item) => item.id !== newItem.id)
+        : [...selectedItems, newItem];
+
+      onChange(newSelectedItems);
+    },
+    [onChange, selectedItems]
+  );
 
   return (
     <SelectWrapper>
@@ -35,11 +50,14 @@ function MultiSelect({ selectedItems, onChange, placeholder = "Placeholder" }: P
           isOpen={isOpen}
           selectedItems={selectedItems}
           placeholder={placeholder}
+          onRemoveItem={(id: number) =>
+            onChange(selectedItems.filter((item) => item.id !== id))
+          }
         />
       </CustomSelect>
       {isOpen && (
         <DropdownList
-          onChange={(item: Item) => onChange([item])}
+          onUpdateItems={onUpdateItems}
           selectedItems={selectedItems}
         />
       )}

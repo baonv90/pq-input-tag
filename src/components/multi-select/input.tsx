@@ -4,27 +4,29 @@ import { Item } from "../../api";
 
 import ArrowIcon from "../../icons/arrow.svg";
 
-const Container = styled.div<{ isOpen: boolean }>`
+import Tag from "./tag";
+
+const Container = styled.div`
   display: grid;
   grid-gap: 8px;
   grid-template-columns: 1fr auto;
   align-items: center;
-
-  svg {
-    transition: all 150ms ease;
-    transform: ${({ isOpen }: { isOpen: boolean }) =>
-      isOpen ? "rotate(180deg)" : ""};
-  }
-`;
-
-const InputContainer = styled.div`
-  display: flex;
-  align-items: center;
   user-select: none;
 `;
 
-const SelectContent = styled.span`
-  color: inherit;
+const Arrow = styled(ArrowIcon)<{ isOpen: boolean }>`
+  transition: all 150ms ease;
+  transform: ${({ isOpen }: { isOpen: boolean }) =>
+    isOpen ? "rotate(180deg)" : ""};
+`;
+
+const SelectContent = styled.div`
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  height: auto;
+  max-height: 70px;
+  overflow: auto;
 `;
 
 const Placeholder = styled.span`
@@ -36,19 +38,33 @@ type Props = {
   isOpen: boolean;
   selectedItems: Item[];
   placeholder: string;
+  onRemoveItem: (id: number) => void;
 };
 
-function InputDisplay({ isOpen, selectedItems, placeholder }: Props) {
+function InputDisplay({
+  isOpen,
+  selectedItems,
+  placeholder,
+  onRemoveItem,
+}: Props) {
   return (
-    <Container isOpen={isOpen}>
-      <InputContainer>
+    <Container>
+      <div>
         {selectedItems.length > 0 ? (
-          <SelectContent>{selectedItems[0]?.label}</SelectContent>
+          <SelectContent>
+            {selectedItems.map((item) => (
+              <Tag
+                key={item.id}
+                tagItem={item}
+                onRemoveItem={() => onRemoveItem(item.id)}
+              />
+            ))}
+          </SelectContent>
         ) : (
           <Placeholder>{placeholder}</Placeholder>
         )}
-      </InputContainer>
-      <ArrowIcon />
+      </div>
+      <Arrow isOpen={isOpen} />
     </Container>
   );
 }

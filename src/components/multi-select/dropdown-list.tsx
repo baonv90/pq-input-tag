@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import { useGetData } from "./use-get-data";
@@ -33,9 +33,10 @@ const Placeholder = styled.div`
   background: #e0e0e0;
 `;
 
-type Props = {
-  onChange: (id: Item) => void;
+type ListProps = {
+  onUpdateItems: (id: Item) => void;
   selectedItems: Item[];
+  options: Item[];
 };
 
 function Loader() {
@@ -52,24 +53,40 @@ function Loader() {
   );
 }
 
-function DropdownList({ onChange, selectedItems }: Props) {
+function List({ options, onUpdateItems, selectedItems }: ListProps) {
+  return (
+    <>
+      {options.map((option) => {
+        const selected = selectedItems.includes(option);
+        return (
+          <Option
+            key={option.id}
+            isSelected={selected}
+            onClick={() => onUpdateItems(option)}
+          >
+            {option.label}
+          </Option>
+        );
+      })}
+    </>
+  );
+}
+
+type Props = Pick<ListProps, "onUpdateItems" | "selectedItems">;
+
+function DropdownList({ onUpdateItems, selectedItems }: Props) {
   const { data, loading } = useGetData();
 
   if (loading) return <Loader />;
-
   if (!data) return null;
 
   return (
     <Dropdown>
-      {data.map((option) => (
-        <Option
-          key={option.id}
-          isSelected={selectedItems.includes(option)}
-          onClick={() => onChange(option)}
-        >
-          {option.label}
-        </Option>
-      ))}
+      <List
+        options={data}
+        onUpdateItems={onUpdateItems}
+        selectedItems={selectedItems}
+      />
     </Dropdown>
   );
 }
