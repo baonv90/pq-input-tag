@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --mode development --hot"
+    "start": "webpack-dev-server --mode development --hot",
+    "build": "webpack --mode production"
   },
   "dependencies": {
     "react": "^17.0.2",
@@ -24,7 +25,6 @@
     "source-map-loader": "^3.0.0",
     "style-loader": "^3.2.1",
     "svg-react-loader": "^0.4.6",
-    "ts-loader": "^9.2.5",
     "webpack": "^5.52.0",
     "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^4.1.1"
