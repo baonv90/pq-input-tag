@@ -42,8 +42,7 @@ function Tag({ tagItem, onRemoveItem }: Props) {
       onClick={(e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         e.stopPropagation();
-      }}
-    >
+      }}>
       <TagName>{tagItem.label}</TagName>
       <CrossIcon
         onClick={() => {

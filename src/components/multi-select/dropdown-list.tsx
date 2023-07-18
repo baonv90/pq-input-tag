@@ -1,22 +1,17 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-import { useGetData } from "./use-get-data";
+import { useGetData } from "../../hooks/use-get-data";
 import { Item } from "../../api";
 
 const Dropdown = styled.div`
-  position: absolute;
-  top: calc(100% + 8px);
-  width: 100%;
   height: 160px;
   overflow-y: auto;
-  border-radius: 4px;
-  z-index: 100;
-  box-shadow: 0px 0px 8px 0px #e0e0e0;
+  border-top: 1px solid #e0e0e0;
 `;
 
 const Option = styled.div<{ isSelected?: boolean }>`
-  padding: 8px;
+  padding: 8px 16px;
   cursor: pointer;
   background: ${({ isSelected }) => (isSelected ? `#BBDEFB` : `#FFFFFF`)};
 
@@ -31,6 +26,14 @@ const Placeholder = styled.div`
   height: 14px;
   border-radius: 2px;
   background: #e0e0e0;
+`;
+
+const Empty = styled.div`
+  color: #ababab;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 type ListProps = {
@@ -56,26 +59,30 @@ function Loader() {
 function List({ options, onUpdateItems, selectedItems }: ListProps) {
   return (
     <>
-      {options.map((option) => {
-        const selected = selectedItems.includes(option);
-        return (
+      {options.length > 0 ? (
+        options.map((option) => (
           <Option
             key={option.id}
-            isSelected={selected}
-            onClick={() => onUpdateItems(option)}
-          >
+            isSelected={selectedItems.includes(option)}
+            onClick={() => onUpdateItems(option)}>
             {option.label}
           </Option>
-        );
-      })}
+        ))
+      ) : (
+        <Empty>No data!</Empty>
+      )}
     </>
   );
 }
 
-type Props = Pick<ListProps, "onUpdateItems" | "selectedItems">;
+type Props = {
+  onUpdateItems: (id: Item) => void;
+  selectedItems: Item[];
+  searchValue: string;
+};
 
-function DropdownList({ onUpdateItems, selectedItems }: Props) {
-  const { data, loading } = useGetData();
+function DropdownList({ onUpdateItems, selectedItems, searchValue }: Props) {
+  const { data, loading } = useGetData(searchValue);
 
   if (loading) return <Loader />;
   if (!data) return null;

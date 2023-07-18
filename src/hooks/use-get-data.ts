@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { getData, Item } from "../../api";
+import { getData, Item } from "../api";
 
-export function useGetData() {
+export function useGetData(searchValue: string) {
   const [data, setData] = useState<Item[]>();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -11,7 +11,13 @@ export function useGetData() {
       try {
         const result = await getData();
         if (result) {
-          setData(result);
+          const filteredData = searchValue
+            ? result.filter((item) =>
+                item.label.toLowerCase().includes(searchValue.toLowerCase())
+              ) || []
+            : result;
+
+          setData(filteredData);
           setLoading(false);
         }
       } catch (err) {
@@ -20,7 +26,7 @@ export function useGetData() {
     };
 
     fetchData();
-  }, []);
+  }, [searchValue]);
 
   return { data, loading };
 }
