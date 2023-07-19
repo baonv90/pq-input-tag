@@ -9,15 +9,9 @@ export function useGetData(searchValue: string) {
     setLoading(true);
     const fetchData = async () => {
       try {
-        const result = await getData();
+        const result = await getData(searchValue);
         if (result) {
-          const filteredData = searchValue
-            ? result.filter((item) =>
-                item.label.toLowerCase().includes(searchValue.toLowerCase())
-              ) || []
-            : result;
-
-          setData(filteredData);
+          setData(result);
           setLoading(false);
         }
       } catch (err) {
