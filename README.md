@@ -1,6 +1,6 @@
 The component can be tested here: https://pasqal-fe.web.app/
 
-#possible improvements
+# possible improvements
 - Adding tests to make sure that the component behaves as expected
 - Allow to navigate via keyboard (ex. moving up/down, 'enter' to select, 'esc' to close the dropdown) for better accessibility
 - Data is already structured, the dropdown list UX could be improved to better display data at different levels
